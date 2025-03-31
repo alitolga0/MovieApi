@@ -1,13 +1,10 @@
 ﻿namespace MovieRestApi.Models
 {
-    public class Director
+    public class Director:BaseEntity
     {
-        public Guid Id { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
-        public List<Movie> Movies { get; set; }
-
-
+        public List<Movie>? Movies { get; set; }
 
     }
 }
