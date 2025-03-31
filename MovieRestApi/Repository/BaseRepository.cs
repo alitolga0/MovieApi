@@ -1,11 +1,12 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using MovieRestApi.Core.Repository;
 using MovieRestApi.Models;
 using System.Linq.Expressions;
 using System.Security.Principal;
 
 namespace MovieRestApi.Repository
 {
-   
+
     public class BaseRepository<TEntity> : IBaseRepository<TEntity>
        where TEntity : BaseEntity, new()
     {
@@ -50,10 +51,13 @@ namespace MovieRestApi.Repository
                 : _context.Set<TEntity>().Where(filter).ToList();
         }
 
-        public async Task Update(TEntity entity, Guid id)
+        public async Task Update(TEntity entity)
         {
-            var updatedEntity = _context.Set<TEntity>().Find(id);
+            var updatedEntity = _context.Set<TEntity>().Find(entity.Id);
             entity.UpdatedAt = DateTime.Now;
+            entity.CreatedAt = updatedEntity.CreatedAt;
+            entity.IsDeleted = updatedEntity.İsDeleted;
+            entity.DeletedAt = updatedEntity.DeletedAt;
 
             _context.Entry(updatedEntity).CurrentValues.SetValues(entity);
 
