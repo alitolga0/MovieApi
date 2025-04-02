@@ -1,10 +1,17 @@
 using Microsoft.EntityFrameworkCore;
+using MovieRestApi.Core.Repository;
 using MovieRestApi.Repository;
+using MovieRestApi.Service.Abstract;
+using MovieRestApi.Service.Concrete;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
+builder.Services.AddScoped<IDirectorService, DirectorService>();
+builder.Services.AddScoped<IMovieService, MovieService>();
+builder.Services.AddScoped<IActorService, ActorService>();
+builder.Services.AddScoped<ICategoryService, CategoryService>();
 builder.Services.AddScoped(typeof(IBaseRepository<>), typeof(BaseRepository<>));
 
 builder.Services.AddControllers();

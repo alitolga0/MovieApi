@@ -9,7 +9,6 @@
         public List<Category>? Categories { get; set; }
         public List<Actor>? Actors { get; set; }
         public Director? Director { get; set; }
-
     }
 }
 

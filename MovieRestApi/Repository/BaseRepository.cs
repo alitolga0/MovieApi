@@ -33,7 +33,7 @@ namespace MovieRestApi.Repository
                 throw new Exception("Verilen Id'ye göre entity bulunmadı!");
             }
 
-            entity.İsDeleted = true;
+            entity.IsDeleted = true;
             entity.DeletedAt = DateTime.Now;
             _context.Set<TEntity>().Update(entity);
             await _context.SaveChangesAsync();
@@ -44,6 +44,18 @@ namespace MovieRestApi.Repository
             return _context.Set<TEntity>().FirstOrDefault(filter);
         }
 
+        public TEntity GetWithNavigation(Expression<Func<TEntity, bool>> filter = null, params string[] navigations)
+        {
+            IQueryable<TEntity> query = _context.Set<TEntity>();
+
+            foreach (var navigation in navigations)
+            {
+                query = query.Include(navigation);
+            }
+
+            return query.FirstOrDefault(filter);
+        }
+
         public List<TEntity> GetAll(Expression<Func<TEntity, bool>> filter = null)
         {
             return filter == null
@@ -51,12 +63,25 @@ namespace MovieRestApi.Repository
                 : _context.Set<TEntity>().Where(filter).ToList();
         }
 
+        public List<TEntity> GetAllWithNavigation(Expression<Func<TEntity, bool>> filter = null, params string[] navigations)
+        {
+            IQueryable<TEntity> query = _context.Set<TEntity>();
+
+            foreach (var navigation in navigations)
+            {
+                query = query.Include(navigation);
+            }
+
+            return filter == null ? query.ToList() : query.Where(filter).ToList();
+        }
+
+
         public async Task Update(TEntity entity)
         {
             var updatedEntity = _context.Set<TEntity>().Find(entity.Id);
             entity.UpdatedAt = DateTime.Now;
             entity.CreatedAt = updatedEntity.CreatedAt;
-            entity.IsDeleted = updatedEntity.İsDeleted;
+            entity.IsDeleted = updatedEntity.IsDeleted;
             entity.DeletedAt = updatedEntity.DeletedAt;
 
             _context.Entry(updatedEntity).CurrentValues.SetValues(entity);
