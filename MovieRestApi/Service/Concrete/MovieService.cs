@@ -10,11 +10,9 @@ namespace MovieRestApi.Service.Concrete
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IBaseRepository<Movie> _baseRepository;
-        private readonly IBaseRepository<Actor> _actorRepository;
-        public MovieService(IBaseRepository<Movie> baseRepository, IBaseRepository<Actor> actorRepository, IUnitOfWork unitOfWork)
+        public MovieService(IBaseRepository<Movie> baseRepository, IUnitOfWork unitOfWork)
         {
             _baseRepository = baseRepository;
-            _actorRepository = actorRepository;
             _unitOfWork = unitOfWork;
         }
 
@@ -23,33 +21,6 @@ namespace MovieRestApi.Service.Concrete
             await _baseRepository.Add(entity);
             await _unitOfWork.SaveChangesAsync();
             return new SuccessResult("başarı ile eklendi ");
-        }
-
-        public async Task<IResult> AddActors(Guid id, List<Guid> actorIds)
-        {
-            var movie = _baseRepository.GetWithNavigation(x => x.Id == id, "Actors");
-            if (movie == null)
-            {
-                return new ErrorResult("Film bulunamadı.");
-            }
-
-            var existingActorIds = movie.Actors.Select(a => a.Id).ToList(); // Filmdeki mevcut aktörler
-            var newActorIds = actorIds.Except(existingActorIds).ToList(); // Yalnızca yeni olanları ekle
-
-            if (!newActorIds.Any())
-            {
-                return new ErrorResult("Bu aktörler zaten ekli.");
-            }
-
-            var newActors = _actorRepository.GetAll(x => newActorIds.Contains(x.Id)); // Sadece yeni aktörleri getir
-            foreach (var actor in newActors)
-            {
-                movie.Actors.Add(actor);
-            }
-
-            await _baseRepository.Update(movie); // Güncelleme işlemi
-            await _unitOfWork.SaveChangesAsync();
-            return new SuccessResult("Yeni aktörler başarıyla eklendi.");
         }
 
         public async Task<IResult> Delete(Guid id)

@@ -6,6 +6,5 @@ namespace MovieRestApi.Service.Abstract
 {
     public interface IMovieService : IBaseService<Movie,Guid>
     {
-        Task<IResult> AddActors(Guid Id, List<Guid> actorIds);
     }
 }

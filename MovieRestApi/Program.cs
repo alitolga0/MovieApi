@@ -12,6 +12,7 @@ builder.Services.AddScoped<IDirectorService, DirectorService>();
 builder.Services.AddScoped<IMovieService, MovieService>();
 builder.Services.AddScoped<IActorService, ActorService>();
 builder.Services.AddScoped<ICategoryService, CategoryService>();
+builder.Services.AddScoped<IMovieOperationService, MovieOperationService>();
 builder.Services.AddScoped(typeof(IBaseRepository<>), typeof(BaseRepository<>));
 
 builder.Services.AddControllers();

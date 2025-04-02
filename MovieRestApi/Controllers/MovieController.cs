@@ -11,12 +11,10 @@ namespace MovieRestApi.Controllers
     public class MovieController : ControllerBase
     {
         private readonly IMovieService _movieService;
-        private readonly IActorService _actorService;
 
-        public MovieController(IMovieService movieService , IActorService actorService)
+        public MovieController(IMovieService movieService)
         {
             _movieService = movieService;
-            _actorService = actorService;
         }
 
         [HttpGet("GetAll")]
@@ -24,8 +22,6 @@ namespace MovieRestApi.Controllers
         {
             return _movieService.GetAll();
         }
-
-        
 
         [HttpGet("GetById")]
         public IDataResult<Movie>GetById(Guid id)
@@ -47,12 +43,6 @@ namespace MovieRestApi.Controllers
         public async Task<IResult> Delete(Guid id)
         {
             return await _movieService.Delete(id);
-        }
-
-        [HttpPost("AddActors")]
-        public async Task<IResult> AddActors(Guid id, List<Guid> actorIds)
-        {
-            return await _movieService.AddActors(id , actorIds);
         }
     }
 }
