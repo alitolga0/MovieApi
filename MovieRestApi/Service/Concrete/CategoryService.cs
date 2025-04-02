@@ -8,22 +8,26 @@ namespace MovieRestApi.Service.Concrete
 {
     public class CategoryService : ICategoryService
     {
+        private readonly IUnitOfWork _unitOfWork;
         private readonly IBaseRepository<Category> _baseRepository;
 
-        public CategoryService(IBaseRepository<Category> baseRepository)
+        public CategoryService(IBaseRepository<Category> baseRepository, IUnitOfWork unitOfWork)
         {
             _baseRepository = baseRepository;
+            _unitOfWork = unitOfWork;
         }
 
         public async Task<IResult> Add(Category entity)
         {
             await _baseRepository.Add(entity);
+            await _unitOfWork.SaveChangesAsync();
             return new SuccessResult("kategori başarı ile kaydedildi");
         }
 
         public async Task<IResult> Delete(Guid id)
         {
             await _baseRepository.Delete(id);
+            await _unitOfWork.SaveChangesAsync();
             return new SuccessResult("kategori başarı ile silindi");
         }
 
@@ -42,6 +46,7 @@ namespace MovieRestApi.Service.Concrete
         public async Task<IResult> Update(Category entity)
         {
             await _baseRepository.Update(entity);
+            await _unitOfWork.SaveChangesAsync();
             return new SuccessResult("başarı ile güncellendi");
         }
     }

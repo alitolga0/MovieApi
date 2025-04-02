@@ -22,7 +22,6 @@ namespace MovieRestApi.Repository
             entity.UpdatedAt = DateTime.Now;
 
             _context.Set<TEntity>().Add(entity);
-            await _context.SaveChangesAsync();
         }
 
         public async Task Delete(Guid Id)
@@ -36,7 +35,6 @@ namespace MovieRestApi.Repository
             entity.IsDeleted = true;
             entity.DeletedAt = DateTime.Now;
             _context.Set<TEntity>().Update(entity);
-            await _context.SaveChangesAsync();
         }
 
         public TEntity Get(Expression<Func<TEntity, bool>> filter)
@@ -85,8 +83,6 @@ namespace MovieRestApi.Repository
             entity.DeletedAt = updatedEntity.DeletedAt;
 
             _context.Entry(updatedEntity).CurrentValues.SetValues(entity);
-
-            await _context.SaveChangesAsync();
         }
     }
 }

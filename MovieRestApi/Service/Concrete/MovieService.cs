@@ -8,17 +8,20 @@ namespace MovieRestApi.Service.Concrete
 {
     public class MovieService : IMovieService
     {
+        private readonly IUnitOfWork _unitOfWork;
         private readonly IBaseRepository<Movie> _baseRepository;
         private readonly IBaseRepository<Actor> _actorRepository;
-        public MovieService(IBaseRepository<Movie> baseRepository, IBaseRepository<Actor> actorRepository)
+        public MovieService(IBaseRepository<Movie> baseRepository, IBaseRepository<Actor> actorRepository, IUnitOfWork unitOfWork)
         {
             _baseRepository = baseRepository;
             _actorRepository = actorRepository;
+            _unitOfWork = unitOfWork;
         }
 
         public async Task<IResult> Add(Movie entity)
         {
             await _baseRepository.Add(entity);
+            await _unitOfWork.SaveChangesAsync();
             return new SuccessResult("başarı ile eklendi ");
         }
 
@@ -45,12 +48,14 @@ namespace MovieRestApi.Service.Concrete
             }
 
             await _baseRepository.Update(movie); // Güncelleme işlemi
+            await _unitOfWork.SaveChangesAsync();
             return new SuccessResult("Yeni aktörler başarıyla eklendi.");
         }
 
         public async Task<IResult> Delete(Guid id)
         {
             await _baseRepository.Delete(id);
+            await _unitOfWork.SaveChangesAsync();
             return new SuccessResult("başarı ile silindi");
         }
 
@@ -69,6 +74,7 @@ namespace MovieRestApi.Service.Concrete
         public async Task<IResult> Update(Movie entity)
         {
             await _baseRepository.Update(entity);
+            await _unitOfWork.SaveChangesAsync();
             return new SuccessResult("başarı ile güncellendi");
         }
     }
