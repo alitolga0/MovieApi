@@ -7,7 +7,6 @@ namespace MovieRestApi.Models
         public string FirstName { get; set; }
         public string LastName { get; set; }
 
-        [JsonIgnore]
         public List<Movie>? Movies { get; set; }
 
 

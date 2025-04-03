@@ -1,8 +1,13 @@
+using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 using MovieRestApi.Core.Repository;
+using MovieRestApi.Models;
 using MovieRestApi.Repository;
 using MovieRestApi.Service.Abstract;
 using MovieRestApi.Service.Concrete;
+using MovieRestApi.Validators;
+using System.Reflection;
+using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,7 +20,14 @@ builder.Services.AddScoped<ICategoryService, CategoryService>();
 builder.Services.AddScoped<IMovieOperationService, MovieOperationService>();
 builder.Services.AddScoped(typeof(IBaseRepository<>), typeof(BaseRepository<>));
 
-builder.Services.AddControllers();
+builder.Services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
+
+builder.Services.AddControllers().AddJsonOptions(options =>
+{
+    options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles; // entity framwork ile iclude ettigimiz nesnenin içerisinde sonsuz döngüye girme problemini çözer
+    options.JsonSerializerOptions.WriteIndented = true;
+}); ;
+
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
