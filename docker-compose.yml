@@ -1,0 +1,30 @@
+version: '3.4'
+
+services:
+  movierestapi:
+    image: ${DOCKER_REGISTRY-}movierestapi
+    build:
+      context: .
+      dockerfile: MovieRestApi/Dockerfile
+    environment:
+      - "ConnectionStrings:DefaultConnection=Server=sqlserver-db;Database=movie_db;User=sa;Password=YourStrong!Passw0rd;TrustServerCertificate=True"
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_HTTP_PORTS=80
+      - ASPNETCORE_HTTPS_PORTS=443
+    ports:
+      - "80:80"
+      - "443:443"
+    depends_on:
+      - db
+  db:
+    image: mcr.microsoft.com/mssql/server:2019-latest
+    container_name: sqlserver-db
+    environment:
+      ACCEPT_EULA: Y
+      MSSQL_SA_PASSWORD: YourStrong!Passw0rd
+    ports:
+      - "1433:1433"
+    volumes:
+      - ./data:/var/opt/mssql/data1
+      - ./log:/var/opt/mssql/log
+      - ./secrets:/var/opt/mssql/secrets
