@@ -72,10 +72,11 @@ docker-compose up --build
 
 | Metot | Endpoint                  | Açıklama             |
 |-------|---------------------------|----------------------|
-| GET   | /api/movies               | Tüm filmleri getirir |
-| POST  | /api/actors               | Yeni aktör ekler     |
-| PUT   | /api/categories/{id}      | Kategori günceller   |
-| DELETE| /api/directors/{id}       | Yönetmen siler       |
+| GET   | /api/movie/GetAll         | Tüm filmleri getirir |
+| GET   | /api/movie/GetById?{id}   | Id'ye göre film getirir |
+| POST  | /api/Actor/Add            | Yeni aktör ekler     |
+| POST  | /api/category/Update      | Kategori günceller   |
+| POST  | /api/director/Delete?{id} | Yönetmen siler       |
 
 ---
 
