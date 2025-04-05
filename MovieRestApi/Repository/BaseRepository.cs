@@ -18,8 +18,8 @@ namespace MovieRestApi.Repository
         public async Task Add(TEntity entity)
         {
             entity.Id = Guid.NewGuid();
-            entity.CreatedAt = DateTime.Now;
-            entity.UpdatedAt = DateTime.Now;
+            entity.CreatedAt = DateTime.UtcNow;
+            entity.UpdatedAt = DateTime.UtcNow;
 
             _context.Set<TEntity>().Add(entity);
         }
@@ -33,7 +33,7 @@ namespace MovieRestApi.Repository
             }
 
             entity.IsDeleted = true;
-            entity.DeletedAt = DateTime.Now;
+            entity.DeletedAt = DateTime.UtcNow;
             _context.Set<TEntity>().Update(entity);
         }
 
@@ -77,7 +77,7 @@ namespace MovieRestApi.Repository
         public async Task Update(TEntity entity)
         {
             var updatedEntity = _context.Set<TEntity>().Find(entity.Id);
-            entity.UpdatedAt = DateTime.Now;
+            entity.UpdatedAt = DateTime.UtcNow;
             entity.CreatedAt = updatedEntity.CreatedAt;
             entity.IsDeleted = updatedEntity.IsDeleted;
             entity.DeletedAt = updatedEntity.DeletedAt;

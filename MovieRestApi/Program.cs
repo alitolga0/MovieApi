@@ -34,15 +34,20 @@ builder.Services.AddSwaggerGen();
 
 
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+
 builder.Services.AddDbContext<MainDbContext>(options =>
 {
-    options.UseSqlServer(connectionString);
-    //options.UseQueryTrackingBehavior(QueryTrackingBehavior.TrackAll);
-    options.EnableSensitiveDataLogging();
+    options.UseNpgsql(connectionString); 
+    options.EnableSensitiveDataLogging(); // Ýsteðe baðlý
 });
 
 var app = builder.Build();
 
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<MainDbContext>();
+    db.Database.Migrate();
+}
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
